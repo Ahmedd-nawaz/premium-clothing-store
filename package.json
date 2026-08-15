@@ -39,6 +39,7 @@
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-hook-form": "^7.84.0",
+    "resend": "^6.18.1",
     "tailwind-merge": "^3.6.0",
     "zod": "^4.4.3"
   },
@@ -49,9 +50,11 @@
     "@types/react-dom": "^19.2.4",
     "eslint": "^9.39.5",
     "eslint-config-next": "^16.3.0",
+    "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.9.6",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "tailwindcss": "^4",
+    "tsx": "4.23.11",
     "typescript": "^5.9.3"
   }
 }

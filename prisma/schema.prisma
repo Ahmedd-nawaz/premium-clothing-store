@@ -283,12 +283,12 @@ model ProductVariant {
   colorHex            String
   sizeName            String
   sizeLabel           String
-  price               Float
-  compareAtPrice      Float?
-  costPrice           Float?
+  price               Decimal  @db.Decimal(10, 2)
+  compareAtPrice      Decimal? @db.Decimal(10, 2)
+  costPrice           Decimal? @db.Decimal(10, 2)
   stock               Int      @default(0)
   lowStockThreshold   Int      @default(5)
-  weight              Float?   // in kg
+  weight              Float?   // in kg — not money, stays Float
   dimensions          Json?    @default("{}") // length, width, height
   isActive            Boolean  @default(true)
   createdAt           DateTime @default(now())
@@ -378,11 +378,11 @@ model Order {
   paymentStatus   PaymentStatus  @default(PENDING)
   paymentMethod   PaymentMethod  @default(COD)
   shippingStatus  ShippingStatus @default(PENDING)
-  subtotal        Float
-  discount        Float          @default(0.0)
-  tax             Float          @default(0.0)
-  shippingCost    Float          @default(0.0)
-  total           Float
+  subtotal        Decimal        @db.Decimal(10, 2)
+  discount        Decimal        @default(0.0) @db.Decimal(10, 2)
+  tax             Decimal        @default(0.0) @db.Decimal(10, 2)
+  shippingCost    Decimal        @default(0.0) @db.Decimal(10, 2)
+  total           Decimal        @db.Decimal(10, 2)
   currency        String         @default("PKR")
   couponCode      String?
   notes           String?
@@ -416,10 +416,10 @@ model OrderItem {
   colorName    String
   sizeName     String
   quantity     Int
-  unitPrice    Float
-  totalPrice   Float
-  discount     Float          @default(0.0)
-  tax          Float          @default(0.0)
+  unitPrice    Decimal        @db.Decimal(10, 2)
+  totalPrice   Decimal        @db.Decimal(10, 2)
+  discount     Decimal        @default(0.0) @db.Decimal(10, 2)
+  tax          Decimal        @default(0.0) @db.Decimal(10, 2)
   productImage String?
   createdAt    DateTime       @default(now())
 
@@ -451,7 +451,7 @@ model Payment {
   gateway           String        // cod, bank_transfer, jazzcash, easypaisa, card
   transactionId     String?       @unique
   status            PaymentStatus @default(PENDING)
-  amount            Float
+  amount            Decimal       @db.Decimal(10, 2)
   currency          String        @default("PKR")
   gatewayResponse   Json?         @default("{}")
   createdAt         DateTime      @default(now())
@@ -470,9 +470,9 @@ model Coupon {
   name                  String
   description           String?
   type                  CouponType
-  value                 Float
-  minOrderAmount        Float?
-  maxDiscountAmount     Float?
+  value                 Decimal      @db.Decimal(10, 2)
+  minOrderAmount        Decimal?     @db.Decimal(10, 2)
+  maxDiscountAmount     Decimal?     @db.Decimal(10, 2)
   usageLimit            Int?
   usageCount            Int          @default(0)
   userUsageLimit        Int?         @default(1)
