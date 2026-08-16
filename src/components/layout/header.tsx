@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/utils";
 import { CartDrawer } from "@/components/cart/cart-drawer";
 import { updateCartItemQuantity, removeCartItem } from "@/actions/cart";
+import { useWishlist } from "@/contexts/wishlist-context";
 import type { CartData } from "@/services/cart-service";
 
 const navLinks = [
@@ -27,6 +28,7 @@ export function Header() {
   const [cart, setCart] = useState<CartData>(EMPTY_CART);
   const [cartLoading, setCartLoading] = useState(false);
   const { data: session } = useSession();
+  const { wishlistIds } = useWishlist();
 
   const refetchCart = useCallback(async () => {
     try {
@@ -113,9 +115,14 @@ export function Header() {
             <Link
               href="/dashboard/wishlist"
               className="relative p-2 rounded-full hover:bg-muted transition-colors"
-              aria-label="Wishlist"
+              aria-label={`Wishlist, ${wishlistIds.size} items`}
             >
               <Heart className="w-5 h-5" />
+              {wishlistIds.size > 0 && (
+                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-accent text-accent-foreground text-[10px] font-medium">
+                  {wishlistIds.size > 99 ? "99+" : wishlistIds.size}
+                </span>
+              )}
             </Link>
 
             {/* Cart */}

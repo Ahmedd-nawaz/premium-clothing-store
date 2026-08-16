@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, UserCog, Package } from "lucide-react";
+import { LayoutDashboard, UserCog, Package, Heart } from "lucide-react";
 import { cn } from "@/utils";
 
 const navItems = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
   { href: "/dashboard/orders", label: "Order History", icon: Package },
+  { href: "/dashboard/wishlist", label: "Wishlist", icon: Heart },
   { href: "/dashboard/profile", label: "Edit Profile", icon: UserCog },
 ];
 

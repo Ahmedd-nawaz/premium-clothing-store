@@ -6,6 +6,7 @@ import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { ProductGallery } from "@/components/product/product-gallery";
 import { VariantSelector } from "@/components/product/variant-selector";
 import { ProductCard } from "@/components/product/product-card";
+import { ProductWishlistButton } from "@/components/product/product-wishlist-button";
 import { getProductBySlug, getRelatedProducts } from "@/services/product-service";
 
 interface ProductPageProps {
@@ -53,13 +54,16 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <ProductGallery images={product.images} productName={product.name} />
 
             <div className="space-y-8">
-              <div>
-                <h1 className="text-3xl font-display font-semibold tracking-tight">{product.name}</h1>
-                {product.categories.length > 0 && (
-                  <p className="text-sm text-muted-foreground mt-1">
-                    {product.categories.map((c) => c.name).join(" · ")}
-                  </p>
-                )}
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h1 className="text-3xl font-display font-semibold tracking-tight">{product.name}</h1>
+                  {product.categories.length > 0 && (
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {product.categories.map((c) => c.name).join(" · ")}
+                    </p>
+                  )}
+                </div>
+                <ProductWishlistButton productId={product.id} />
               </div>
 
               <VariantSelector variants={product.variants} />

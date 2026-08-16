@@ -8,6 +8,7 @@ import { cn, formatCurrency } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { addToCart } from "@/actions/cart";
+import { useWishlist } from "@/contexts/wishlist-context";
 
 interface ProductCardProps {
   id: string;
@@ -58,6 +59,25 @@ export function ProductCard({
   const [isPending, startTransition] = useTransition();
   const [justAdded, setJustAdded] = useState(false);
   const [cartError, setCartError] = useState<string | null>(null);
+  const wishlist = useWishlist();
+  const [wishlistError, setWishlistError] = useState<string | null>(null);
+
+  // Always reflects real saved state from context — a parent-supplied
+  // isInWishlist/onToggleWishlist pair (if any) is treated as an optional
+  // extra notification hook, not a takeover, so this never silently
+  // no-ops just because *some* callback happened to be passed in.
+  const effectiveIsInWishlist = wishlist.isWishlisted(id);
+
+  const handleToggleWishlist = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    onToggleWishlist?.();
+
+    setWishlistError(null);
+    const result = await wishlist.toggle(id);
+    if (!result.success && result.error) setWishlistError(result.error);
+  };
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -182,18 +202,14 @@ export function ProductCard({
 
           {/* Wishlist Button */}
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              onToggleWishlist?.();
-            }}
+            onClick={handleToggleWishlist}
             className={cn(
               "absolute top-3 right-3 p-2 rounded-full bg-background/80 backdrop-blur-sm transition-all duration-200 opacity-0 group-hover:opacity-100 hover:bg-background hover:shadow-md",
-              isInWishlist && "opacity-100 text-danger"
+              effectiveIsInWishlist && "opacity-100 text-danger"
             )}
-            aria-label={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
+            aria-label={effectiveIsInWishlist ? "Remove from wishlist" : "Add to wishlist"}
           >
-            <Heart className={cn("w-5 h-5 transition-colors", isInWishlist && "fill-current")} />
+            <Heart className={cn("w-5 h-5 transition-colors", effectiveIsInWishlist && "fill-current")} />
           </button>
 
           {/* Quick View */}
@@ -280,6 +296,7 @@ export function ProductCard({
         </Button>
 
         {cartError && <p className="text-xs text-danger mt-1.5">{cartError}</p>}
+        {wishlistError && <p className="text-xs text-danger mt-1.5">{wishlistError}</p>}
       </div>
     </article>
   );
